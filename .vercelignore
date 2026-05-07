@@ -1,6 +1,6 @@
 backend/
 notebook/
-data/
+/data/
 venv/
 .venv/
 __pycache__/

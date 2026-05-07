@@ -4,7 +4,7 @@ import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
   LineChart, Line, PieChart, Pie, Cell, ScatterChart, Scatter, ZAxis,
 } from 'recharts';
-import { ARXIV_CATEGORIES, CATEGORY_STATS, SAMPLE_PAPERS } from '@/data/arxivData';
+import { ARXIV_CATEGORIES, CATEGORY_STATS, SAMPLE_PAPERS } from '@/data/arxivData.ts';
 import type { Hypothesis, Insight } from '../utils/hypothesisEngine';
 
 const COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#14b8a6', '#a855f7', '#f97316', '#0ea5e9', '#84cc16'];

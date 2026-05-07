@@ -9,7 +9,7 @@ import { SectionHeader } from "../components/SectionHeader";
 import {
   arxivCategoryDistribution, arxivYearlyGrowth, arxivAbstractLengthDist,
   arxivMultiModalStats, arxivAuthorCollaboration, arxivTopKeywords
-} from "@/data/arxivData";
+} from "@/data/arxivData.ts";
 
 export function ArxivEDA() {
   return (

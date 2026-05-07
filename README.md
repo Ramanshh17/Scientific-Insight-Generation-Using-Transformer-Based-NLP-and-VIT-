@@ -1,139 +1,246 @@
-# Scientific Insight Generation Using Transformer-Based NLP and ViT (Vision Transformer)
+# Scientific Insight Generation Using Transformer-Based NLP and ViT
 
-[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-2.x-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
-[![React](https://img.shields.io/badge/React-19.x-61DAFB?style=flat-square&logo=react&logoColor=black)](https://reactjs.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
+A multimodal scientific analysis platform that processes research papers, images, and tabular data to generate novel hypotheses and insights.
 
-An advanced multimodal AI platform designed to accelerate scientific research by analyzing text, images, and tabular data simultaneously. The system leverages state-of-the-art Transformer architectures (SciBERT, ViT, FLAN-T5) to generate hypotheses, identify research gaps, and perform semantic search across millions of scientific papers.
+## Features
 
----
+- **Multimodal Synthesis**: Combines text (SciBERT), images (ViT), and tabular data (GRN) into unified analysis
+- **Insight Generation**: Uses FLAN-T5 to generate summaries, research gaps, and hypotheses
+- **Semantic Search**: FAISS-powered vector search across arXiv papers
+- **Explainable AI**: Visualizes attention weights and feature importance
+- **Cross-Modal Attention**: Fuses information from multiple modalities
 
-## 🚀 Key Features
+## Architecture
 
-- **Multimodal Scientific Analysis**: Integrate and analyze diverse data types including research abstracts, experimental figures (ViT), and raw data (CSV).
-- **Automated Hypothesis Generation**: Uses fine-tuned FLAN-T5 to propose novel research directions based on input data and existing literature.
-- **Semantic ArXiv Search**: Sub-linear search across millions of papers using FAISS vector indexing and SciBERT embeddings.
-- **Research Gap Identification**: Automatically scans related work to highlight missing links and unexplored areas in current scientific literature.
-- **Trend Visualization**: Real-time analytics of publication trends across different ArXiv categories.
-- **Architecture Explainability**: Detailed breakdowns of the underlying neural networks (SciBERT, ResNet, Cross-Modal Attention).
+### Models Used
 
----
+| Component | Model | Purpose |
+|-----------|-------|---------|
+| Text Analysis | SciBERT | Scientific text understanding |
+| Image Vision | Vision Transformer (ViT) | Scientific figure analysis |
+| Tabular Logic | Gated Residual Networks (GRN) | Experimental data processing |
+| Data Fusion | Cross-Modal Multihead Attention | Multimodal integration |
+| Reasoning | FLAN-T5 | Hypothesis generation |
+| Vector Search | FAISS | Semantic paper search |
 
-## 🏗️ System Architecture
-
-The platform follows a modern microservices-inspired architecture with a decoupled Flask backend and a Vite-powered React frontend.
-
-### Backend Pipeline
-1.  **Encoders**:
-    *   **Text**: SciBERT (Scientific Bidirectional Encoder Representations from Transformers) for domain-specific language understanding.
-    *   **Image**: Vision Transformer (ViT) / ResNet-50 for high-fidelity feature extraction from scientific diagrams.
-    *   **Tabular**: Gated Residual Networks for adaptive feature selection from experimental data.
-2.  **Fusion Layer**: Cross-modal multi-head attention mechanism to fuse text and visual features into a unified semantic space.
-3.  **Generative AI**: FLAN-T5 (Large) for generating human-readable summaries and scientific hypotheses.
-4.  **Vector Store**: FAISS (Facebook AI Similarity Search) for efficient nearest-neighbor retrieval.
-
----
-
-## 🛠️ Tech Stack
-
-### Backend
-- **Framework**: Flask
-- **Deep Learning**: PyTorch, Hugging Face Transformers
-- **Vector Search**: FAISS
-- **Data Processing**: Pandas, NumPy, PIL
-- **Domain Models**: SciBERT, FLAN-T5
-
-### Frontend
-- **Framework**: React 19 (Vite)
-- **Styling**: Tailwind CSS 4, Framer Motion (Animations)
-- **UI Components**: Radix UI (Shadcn/ui)
-- **Visualization**: Recharts
-- **State Management**: React Hooks
-
----
-
-## 🛠️ Installation & Setup
+## Quick Start
 
 ### Prerequisites
+
 - Python 3.9+
 - Node.js 18+
-- pnpm (recommended) or npm
+- 8GB RAM minimum (16GB recommended)
+- GPU optional (for faster inference)
 
-### Backend Setup
-1. Navigate to the backend directory:
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Ramanshh17/Scientific-Insight-Generation-Using-Transformer-Based-NLP-and-VIT-.git
+   cd cp1
+   ```
+
+2. **Set up backend**
    ```bash
    cd backend
-   ```
-2. Create and activate a virtual environment:
-   ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-3. Install dependencies:
-   ```bash
+   # Windows
+   venv\Scripts\activate
+   # Linux/Mac
+   source venv/bin/activate
+   
    pip install -r requirements.txt
    ```
-4. Build the search index (requires ArXiv dataset):
-   ```bash
-   python build_index.py
-   ```
-5. Start the Flask server:
-   ```bash
-   python app.py
-   ```
 
-### Frontend Setup
-1. Navigate to the frontend directory:
+3. **Set up frontend**
    ```bash
    cd frontend
+   npm install
    ```
-2. Install dependencies:
+
+4. **Download sample data**
    ```bash
-   pnpm install
+   cd backend
+   python scripts/download_all_data.py
    ```
-3. Start the development server:
+
+5. **Run the application**
+   
+   Terminal 1 (Backend):
    ```bash
-   pnpm dev
+   cd backend
+   python app.py
+   ```
+   
+   Terminal 2 (Frontend):
+   ```bash
+   cd frontend
+   npm run dev
    ```
 
----
+6. **Access the application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:5000/api
 
-## 📖 Usage
+## Dataset Sources
 
-1.  **Dashboard**: Upload your research abstract, a figure (PNG/JPG), and experimental data (CSV).
-2.  **Analysis**: Click "Analyze" to see a multimodal summary, generated hypotheses, and identified research gaps.
-3.  **Discovery**: Search for related papers using natural language queries.
-4.  **Trends**: Select a category (e.g., `cs.AI`, `physics.gen-ph`) to visualize publication trends over time.
+### Supported Datasets
 
----
+1. **arXiv** - 2M+ scientific papers
+   - Source: https://www.kaggle.com/datasets/Cornell-University/arxiv
+   - Categories: AI, ML, Quantum Physics, Bioinformatics, etc.
 
-## 🗺️ Roadmap
+2. **World Bank** - Global development indicators
+   - Source: https://databank.worldbank.org
+   - Includes GDP, population, health, education metrics
 
-- [ ] Support for direct PDF ingestion and full-text parsing.
-- [ ] Integration with more scientific databases (PubMed, Semantic Scholar).
-- [ ] Multi-GPU support for faster indexing.
-- [ ] Interactive graph visualization of related papers.
+3. **RVL-CDIP** - Document image dataset
+   - Source: http://www.datascienceassn.org/sites/default/files/rvl-cdip.tar.gz
+   - 400K grayscale document images in 16 categories
 
----
+### Download Full Datasets
 
-## 🤝 Contributing
+```bash
+# arXiv (requires Kaggle API)
+kaggle datasets download -d Cornell-University/arxiv
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+# World Bank - manual download from website
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+# RVL-CDIP
+wget http://www.datascienceassn.org/sites/default/files/rvl-cdip.tar.gz
+```
 
----
+## API Endpoints
 
-## 📄 License
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/health` | GET | System health status |
+| `/api/analyze` | POST | Multimodal analysis |
+| `/api/search` | POST | Search arXiv papers |
+| `/api/trends` | GET | Get research trends |
+| `/api/generate-hypothesis` | POST | Generate hypotheses |
+| `/api/categories` | GET | List arXiv categories |
 
-Distributed under the MIT License. See `LICENSE` for more information.
+### Example API Usage
 
----
+```bash
+# Analyze multimodal input
+curl -X POST http://localhost:5000/api/analyze \
+  -F "text=Research abstract here..." \
+  -F "image=@figure.png" \
+  -F "csv=@data.csv"
 
-**Developed with ❤️ for the Scientific Community.**
+# Search papers
+curl -X POST http://localhost:5000/api/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "transformer attention", "category": "Machine Learning", "top_k": 10}'
+
+# Generate hypotheses
+curl -X POST http://localhost:5000/api/generate-hypothesis \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Research text...", "domain": "Computer Science"}'
+```
+
+## Project Structure
+
+```
+cp1/
+├── backend/
+│   ├── app.py                 # Flask API server
+│   ├── config.py              # Configuration
+│   ├── models/
+│   │   ├── text_analyzer.py   # SciBERT text analysis
+│   │   ├── image_analyzer.py  # ViT image analysis
+│   │   ├── tabular_analyzer.py # GRN tabular analysis
+│   │   ├── fusion.py          # Cross-modal attention
+│   │   └── hypothesis_generator.py # FLAN-T5 generation
+│   ├── services/
+│   │   ├── insight_service.py # Main analysis pipeline
+│   │   ├── arxiv_service.py   # arXiv search & trends
+│   │   ├── feature_engineering.py # Feature extraction
+│   │   └── pdf_processor.py   # PDF extraction
+│   ├── scripts/
+│   │   └── download_all_data.py # Dataset setup
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── App.tsx            # Main application
+│   │   ├── utils/
+│   │   │   ├── api.ts         # API client
+│   │   │   └── components/
+│   │   │       ├── UploadForm.tsx
+│   │   │       ├── ResultsPanel.tsx
+│   │   │       ├── RetrievalView.tsx
+│   │   │       └── explanationView.tsx
+│   └── package.json
+├── data/                      # Data directory
+└── README.md
+```
+
+## Feature Engineering
+
+The platform extracts comprehensive features from each modality:
+
+### Text Features
+- Word count, sentence count, readability score
+- Scientific terminology density
+- Domain classification
+- Key concept extraction
+- Citation and methodology detection
+
+### Image Features
+- Brightness, contrast, entropy
+- Color channel statistics
+- Edge density and texture features
+- Quadrant analysis
+- Image complexity score
+
+### Tabular Features
+- Statistical summaries (mean, std, min, max, quartiles)
+- Correlation analysis
+- Trend detection
+- Data quality scoring
+- Outlier handling (IQR method)
+
+## Model Details
+
+### SciBERT (Text Analysis)
+- Model: `allenai/scibert_scivocab_uncased`
+- Trained on 1.14M scientific papers
+- Embedding dimension: 768
+
+### Vision Transformer (Image Analysis)
+- Model: `google/vit-base-patch16-224`
+- Patch size: 16x16
+- Embedding dimension: 768
+
+### Gated Residual Networks (Tabular)
+- 3-layer GRN stack
+- Input: 128 dimensions
+- Output: 64 dimensions
+
+### Cross-Modal Attention (Fusion)
+- Projects all modalities to 256 dimensions
+- 8-head multi-head attention
+- Output: 384-dimensional fused embedding
+
+### FLAN-T5 (Generation)
+- Model: `google/flan-t5-base`
+- Max sequence length: 512 tokens
+- Beam search with 4 beams
+
+## License
+
+MIT License
+
+## Citation
+
+If you use this project in your research, please cite:
+
+```bibtex
+@misc{scientific-insight-generation,
+  title={Scientific Insight Generation Using Transformer-Based NLP and ViT},
+  author={Raman Sharma},
+  year={2024},
+  url={https://github.com/Ramanshh17/Scientific-Insight-Generation-Using-Transformer-Based-NLP-and-VIT-}
+}

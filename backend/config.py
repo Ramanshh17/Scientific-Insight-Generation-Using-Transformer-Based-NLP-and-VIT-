@@ -1,49 +1,56 @@
-# backend/config.py
-
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Config:
-    # Dataset paths - ArXiv from Kaggle
-    ARXIV_DATA_PATH = "data/raw/arxiv-metadata-oai-snapshot.json"
-    PROCESSED_DATA_PATH = "data/processed/"
-    EMBEDDINGS_PATH = "data/embeddings/"
-    FAISS_INDEX_PATH = "data/index/arxiv_faiss.index"
+    # Flask
+    SECRET_KEY = os.getenv("SECRET_KEY", "sciinsight2024")
+    DEBUG = os.getenv("DEBUG", "True") == "True"
     
-    # Model configurations
+    # Models
     SCIBERT_MODEL = "allenai/scibert_scivocab_uncased"
-    FLAN_T5_MODEL = "google/flan-t5-large"
-    VISION_MODEL = "microsoft/resnet-50"
+    VIT_MODEL = "google/vit-base-patch16-224"
+    FLAN_T5_MODEL = "google/flan-t5-base"
+    SENTENCE_MODEL = "all-MiniLM-L6-v2"
     
-    # ArXiv categories we analyze
-    # These map to the actual category codes in the ArXiv dataset
+    # Paths
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_DIR = os.path.join(BASE_DIR, "..", "data")
+    UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+    FAISS_INDEX_PATH = os.path.join(DATA_DIR, "processed", "arxiv_faiss.index")
+    ARXIV_METADATA_PATH = os.path.join(DATA_DIR, "processed", "arxiv_metadata.pkl")
+    PROCESSED_DATA_PATH = os.path.join(DATA_DIR, "processed")
+    EMBEDDINGS_PATH = os.path.join(DATA_DIR, "embeddings")
+    
+    # Sample Datasets
+    SAMPLE_DIR = os.path.join(DATA_DIR, "sample")
+    WORLD_BANK_SAMPLE = os.path.join(SAMPLE_DIR, "worldbank_sample.csv")
+    IMAGE_SAMPLE_DIR = os.path.join(DATA_DIR, "images")
+
+    # Framework data (from multimodal_scientific_framework)
+    PAPERS_CSV = os.path.join(DATA_DIR, "processed", "papers_metadata.csv")
+    IMAGE_MAPPINGS_CSV = os.path.join(DATA_DIR, "processed", "image_mappings.csv")
+    ENTITIES_JSON = os.path.join(DATA_DIR, "processed", "extracted_entities.json")
+    
+    # arXiv Categories
     ARXIV_CATEGORIES = {
-        "cs.AI": "Artificial Intelligence",
-        "cs.LG": "Machine Learning", 
-        "cs.CV": "Computer Vision",
-        "quant-ph": "Quantum Physics",
-        "q-bio": "Quantitative Biology",
-        "eess.SP": "Signal Processing",
-        "physics.med-ph": "Medical Physics",
-        "cs.CL": "Computational Linguistics",
-        "stat.ML": "Statistical Machine Learning",
-        "math.ST": "Statistics Theory"
+        "AI": "cs.AI",
+        "Machine Learning": "cs.LG", 
+        "Quantum Physics": "quant-ph",
+        "Bioinformatics": "q-bio",
+        "Computer Vision": "cs.CV",
+        "NLP": "cs.CL",
+        "Physics": "physics",
+        "Mathematics": "math"
     }
     
-    # Feature engineering parameters
-    MAX_TEXT_LENGTH = 512
-    IMAGE_SIZE = (224, 224)
-    EMBEDDING_DIM = 768
-    BATCH_SIZE = 32
+    # Upload settings
+    MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50MB
+    ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'csv', 'txt'}
     
-    # Search parameters
+    # FAISS
+    FAISS_DIMENSION = 384
     TOP_K_RESULTS = 10
-    SIMILARITY_THRESHOLD = 0.75
-    
-    # API settings
-    HOST = "0.0.0.0"
-    PORT = 5000
-    DEBUG = False
-    MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50MB upload limit
-    UPLOAD_FOLDER = "data/uploads/"
-    
-    SECRET_KEY = os.environ.get("SECRET_KEY", "scientific-platform-key-2024")
+
+config = Config()

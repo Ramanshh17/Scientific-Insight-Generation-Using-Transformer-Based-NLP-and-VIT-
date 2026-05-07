@@ -1,0 +1,1057 @@
+{
+  "0801.0253": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "92"
+    ]
+  },
+  "0706.0022": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.3781": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0709.0509": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.4475": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "39",
+      "45"
+    ]
+  },
+  "0802.1412": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "0706.3188": {
+    "methods": [],
+    "datasets": [
+      "accumulating dataset"
+    ],
+    "metrics": []
+  },
+  "0707.3575": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0706.1061": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0709.1667": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.0736": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.4273": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.0171": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0706.3434": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.4516": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.4983": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.0744": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.4388": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.0784": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.1675": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.3515": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "0712.4153": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.2870": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "0710.3183": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0706.0585": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0705.4676": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0705.3669": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.0671": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0708.0654": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.1913": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.2506": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0708.0741": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.1525": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.3807": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "0705.4654": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0708.1964": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0709.4015": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0709.1190": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.0830": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.1179": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.0694": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3239": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.0805": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.2801": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "precision"
+    ]
+  },
+  "0704.3662": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "0704.0304": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0706.0534": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.1409": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.4159": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.2725": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "9",
+      "40",
+      "23"
+    ]
+  },
+  "0704.3780": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.4402": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0709.0116": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0705.2106": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0705.3693": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.0705": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.1274": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.4734": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.1345": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.4142": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0705.1617": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.4725": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0709.1920": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.3973": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.0672": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.1402": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.3395": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.2526": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "0801.4314": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4312": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4287": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3550": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4119": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3971": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3549": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.1658": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3547": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3539": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3209": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.1669": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0709.4669": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0709.2065": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.4231": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0705.1613": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "precision"
+    ]
+  },
+  "0705.0734": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.3591": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.1466": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "Precision"
+    ]
+  },
+  "0710.4975": {
+    "methods": [],
+    "datasets": [
+      "test dataset"
+    ],
+    "metrics": []
+  },
+  "0712.0836": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.0808": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0708.3226": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0708.1580": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0705.4485": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0706.2040": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.2001": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.2655": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.1783": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3199": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.0047": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "0704.2092": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0705.2363": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.1306": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.1158": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.2906": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "10"
+    ]
+  },
+  "0705.4230": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4627": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0706.2797": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.4102": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.4072": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.3972": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.4101": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0708.2303": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.0341": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.1295": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.0802": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.3087": {
+    "methods": [
+      "Reinforcement Learning"
+    ],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.4099": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.0660": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.0928": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.1360": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.1401": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.2104": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.2611": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.0410": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.3580": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.2434": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0705.2318": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0711.4902": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.0653": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.2063": {
+    "methods": [],
+    "datasets": [
+      "a dataset"
+    ],
+    "metrics": []
+  },
+  "0712.1698": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.1365": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.1296": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.0845": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.0485": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.0009": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.2050": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.0954": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.1139": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.2138": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "0710.1511": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.0105": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.0287": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.0252": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0704.2010": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "Recall",
+      "Precision"
+    ]
+  },
+  "0801.1415": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.1336": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.1275": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.1440": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3908": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4061": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4307": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4746": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4790": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4629": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.2428": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "99",
+      "85"
+    ]
+  },
+  "0802.3125": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.3137": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3654": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3817": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "60.8",
+      "34.0",
+      "14.9"
+    ]
+  },
+  "0801.3864": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3871": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.2758": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.2429": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.1219": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.0232": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.3825": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.3390": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.0390": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.0848": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.1063": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.3329": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.3536": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.2934": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.2618": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3111": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.0386": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3147": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3113": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0707.0701": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.2378": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.2069": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.1988": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.2510": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.1883": {
+    "methods": [
+      "RNN"
+    ],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.3102": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4794": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4716": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.4807": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.0116": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0801.1196": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0802.2411": {
+    "methods": [],
+    "datasets": [],
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "0711.2909": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.2389": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.3147": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.2682": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0709.4464": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.0508": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0710.3561": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  },
+  "0712.0932": {
+    "methods": [],
+    "datasets": [],
+    "metrics": []
+  }
+}

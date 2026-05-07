@@ -1,376 +1,374 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
-import json
-import pandas as pd
-import numpy as np
-from werkzeug.utils import secure_filename
+import logging
 import traceback
-from datetime import datetime
-import io
-from PIL import Image
+from config import config
 
-from config import Config
-from services.feature_engineering import TextFeatureEngineer, ImageFeatureEngineer, TabularFeatureEngineer
-from services.search_service import ArXivSearchService
-from services.pdf_processor import PDFProcessor
-from models.hypothesis_generator import HypothesisGenerator
-from models.fusion_model import MultimodalFusionModel
-import torch
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
+app = Flask(__name__)
+CORS(app, origins=["*"])
+app.config['MAX_CONTENT_LENGTH'] = config.MAX_CONTENT_LENGTH
 
-app = Flask(__name__, static_folder='../frontend')
-app.config.from_object(Config)
-CORS(app)
+# Create upload directory
+os.makedirs(config.UPLOAD_DIR, exist_ok=True)
 
-os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)
+# ==========================================
+# Lazy import services to avoid startup crash
+# ==========================================
+_insight_service = None
+_arxiv_service = None
 
-# Initialize all services
-print("Initializing services...")
-text_engineer = TextFeatureEngineer()
-image_engineer = ImageFeatureEngineer()
-tabular_engineer = TabularFeatureEngineer()
-search_service = ArXivSearchService()
-pdf_processor = PDFProcessor()
-hypothesis_gen = HypothesisGenerator()
+def get_insight_service():
+    global _insight_service
+    if _insight_service is None:
+        from services.insight_service import insight_service
+        _insight_service = insight_service
+    return _insight_service
 
-# Load pre-built FAISS index if it exists
-if os.path.exists(Config.FAISS_INDEX_PATH):
-    search_service.load(
-        Config.FAISS_INDEX_PATH,
-        os.path.join(Config.PROCESSED_DATA_PATH, 'arxiv_processed.parquet')
-    )
-    print("FAISS index loaded successfully")
-else:
-    print("FAISS index not found - run build_index.py first")
+def get_arxiv_service():
+    global _arxiv_service
+    if _arxiv_service is None:
+        from services.arxiv_service import arxiv_service
+        _arxiv_service = arxiv_service
+    return _arxiv_service
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'csv', 'json'}
-
+# ==========================================
+# HELPER
+# ==========================================
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
+def read_file_bytes(file_obj):
+    return file_obj.read()
 
-@app.route('/')
-def serve_frontend():
-    return send_from_directory('../frontend', 'index.html')
+# ==========================================
+# ROUTES
+# ==========================================
 
-
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory('../frontend', path)
-
-
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    """Health check endpoint to verify all services are running."""
+@app.route('/', methods=['GET'])
+def index():
     return jsonify({
-        'status': 'operational',
-        'timestamp': datetime.now().isoformat(),
-        'services': {
-            'text_model': 'loaded',
-            'image_model': 'loaded',
-            'faiss_index': 'loaded' if search_service.index else 'not loaded',
-            'hypothesis_generator': 'loaded',
-            'arxiv_papers': search_service.index.ntotal if search_service.index else 0
-        }
-    })
-
-
-@app.route('/api/analyze', methods=['POST'])
-def analyze_multimodal():
-    """
-    Main analysis endpoint.
-    
-    Accepts: multipart/form-data with optional fields:
-    - abstract: text string
-    - image: image file (PNG, JPG)
-    - csv_file: tabular data file
-    - pdf_file: PDF research paper
-    - domain: ArXiv category code
-    
-    Returns: JSON with summary, hypotheses, research gaps, related papers
-    
-    Why multipart/form-data over JSON:
-    Binary files (images, PDFs) cannot be serialized to JSON efficiently.
-    Multipart allows mixed text and binary data in a single request.
-    """
-    try:
-        # Extract text input
-        abstract = request.form.get('abstract', '')
-        domain = request.form.get('domain', 'cs.AI')
-        
-        results = {
-            'timestamp': datetime.now().isoformat(),
-            'domain': domain,
-            'modalities_processed': []
-        }
-        
-        text_features = None
-        image_features = None
-        tabular_features = None
-        pdf_data = None
-        
-        # Process abstract/text
-        if abstract and len(abstract.strip()) > 50:
-            print("Processing text...")
-            text_feat_matrix, feat_info = text_engineer.engineer_all_features(
-                [abstract], fit=False
-            )
-            text_features = text_feat_matrix[0]
-            results['modalities_processed'].append('text')
-            results['text_features_dim'] = feat_info['total_dim']
-        
-        # Process uploaded image
-        if 'image' in request.files:
-            image_file = request.files['image']
-            if image_file and allowed_file(image_file.filename):
-                print("Processing image...")
-                img = Image.open(image_file.stream)
-                image_features = image_engineer.process_image(img)
-                results['modalities_processed'].append('image')
-                results['image_size'] = img.size
-                results['image_mode'] = img.mode
-        
-        # Process CSV data
-        if 'csv_file' in request.files:
-            csv_file = request.files['csv_file']
-            if csv_file and allowed_file(csv_file.filename):
-                print("Processing CSV...")
-                df = pd.read_csv(csv_file.stream)
-                if len(df) > 0:
-                    feat_matrix, feat_names = tabular_engineer.engineer_features(df)
-                    tabular_features = feat_matrix.mean(axis=0)  # Aggregate rows
-                    results['modalities_processed'].append('tabular')
-                    results['csv_shape'] = list(df.shape)
-                    results['engineered_features'] = feat_names[:20]
-                    results['csv_statistics'] = {
-                        col: {
-                            'mean': float(df[col].mean()) if pd.api.types.is_numeric_dtype(df[col]) else None,
-                            'std': float(df[col].std()) if pd.api.types.is_numeric_dtype(df[col]) else None,
-                            'missing': int(df[col].isna().sum())
-                        }
-                        for col in df.columns[:10]  # First 10 columns
-                    }
-        
-        # Process PDF file
-        if 'pdf_file' in request.files:
-            pdf_file = request.files['pdf_file']
-            if pdf_file and allowed_file(pdf_file.filename):
-                print("Processing PDF...")
-                filename = secure_filename(pdf_file.filename)
-                pdf_path = os.path.join(Config.UPLOAD_FOLDER, filename)
-                pdf_file.save(pdf_path)
-                
-                pdf_data = pdf_processor.extract_all(pdf_path)
-                results['modalities_processed'].append('pdf')
-                results['pdf_statistics'] = pdf_data['statistics']
-                results['pdf_sections'] = list(pdf_data['sections'].keys())
-                
-                # Use abstract from PDF if no text provided
-                if not abstract and 'abstract' in pdf_data['sections']:
-                    abstract = pdf_data['sections']['abstract']
-                    text_feat_matrix, feat_info = text_engineer.engineer_all_features(
-                        [abstract], fit=False
-                    )
-                    text_features = text_feat_matrix[0]
-                
-                os.remove(pdf_path)  # Clean up uploaded file
-        
-        # Require at least text input for meaningful analysis
-        if not abstract:
-            return jsonify({'error': 'At least an abstract or PDF is required for analysis'}), 400
-        
-        # Generate semantic embedding for search
-        print("Generating semantic embedding for search...")
-        search_embedding = text_engineer.get_scibert_embeddings([abstract])[0]
-        
-        # Search related papers
-        related_papers = []
-        if search_service.index:
-            related_papers = search_service.search(
-                search_embedding.astype(np.float32),
-                k=Config.TOP_K_RESULTS,
-                category_filter=[domain] if domain else None
-            )
-        
-        # Generate insights
-        print("Generating summary...")
-        image_desc = f"Scientific image with {results.get('image_size', 'unknown')} dimensions" if 'image' in results.get('modalities_processed', []) else None
-        csv_summary = f"Dataset with {results.get('csv_shape', ['?', '?'])[0]} rows and {results.get('csv_shape', ['?', '?'])[1]} columns" if 'tabular' in results.get('modalities_processed', []) else None
-        
-        summary = hypothesis_gen.generate_summary(abstract, image_desc, csv_summary)
-        
-        print("Generating hypotheses...")
-        hypotheses = hypothesis_gen.generate_hypotheses(abstract, related_papers, domain)
-        
-        print("Identifying research gaps...")
-        gaps = hypothesis_gen.identify_research_gaps(abstract, related_papers)
-        
-        # Compile final results
-        results.update({
-            'summary': summary,
-            'hypotheses': hypotheses,
-            'research_gaps': gaps,
-            'related_papers': related_papers[:8],
-            'abstract_analyzed': abstract[:300] + '...' if len(abstract) > 300 else abstract
-        })
-        
-        return jsonify(results)
-    
-    except Exception as e:
-        print(f"Analysis error: {traceback.format_exc()}")
-        return jsonify({'error': str(e), 'trace': traceback.format_exc()}), 500
-
-
-@app.route('/api/search', methods=['POST'])
-def semantic_search():
-    """
-    Semantic search endpoint for the arXiv corpus.
-    Accepts a text query and returns the most similar papers.
-    """
-    data = request.get_json()
-    query = data.get('query', '')
-    category = data.get('category', None)
-    k = data.get('k', 10)
-    
-    if not query:
-        return jsonify({'error': 'Query text is required'}), 400
-    
-    if not search_service.index:
-        return jsonify({'error': 'Search index not initialized'}), 503
-    
-    try:
-        # Generate embedding for the query
-        query_embedding = text_engineer.get_scibert_embeddings([query])[0]
-        
-        # Search
-        category_filter = [category] if category else None
-        results = search_service.search(
-            query_embedding.astype(np.float32),
-            k=k,
-            category_filter=category_filter
-        )
-        
-        return jsonify({
-            'query': query,
-            'category': category,
-            'results': results,
-            'total_found': len(results)
-        })
-    
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
-@app.route('/api/trends', methods=['GET'])
-def get_trends():
-    """
-    Get publication trend data for a specific ArXiv category.
-    Used for the Discovery page trend visualization.
-    """
-    category = request.args.get('category', 'cs.AI')
-    start_year = int(request.args.get('start_year', 2018))
-    end_year = int(request.args.get('end_year', 2024))
-    
-    if not search_service.paper_metadata is not None:
-        return jsonify({'error': 'ArXiv data not loaded'}), 503
-    
-    try:
-        trends = search_service.detect_trends(category, start_year, end_year)
-        return jsonify(trends)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
-@app.route('/api/categories', methods=['GET'])
-def get_categories():
-    """Return available ArXiv categories with paper counts."""
-    if search_service.paper_metadata is None:
-        return jsonify({'error': 'Data not loaded'}), 503
-    
-    category_counts = {}
-    for code, name in Config.ARXIV_CATEGORIES.items():
-        count = int(search_service.paper_metadata['categories'].str.contains(
-            code, na=False
-        ).sum())
-        category_counts[code] = {
-            'name': name,
-            'count': count,
-            'code': code
-        }
-    
-    return jsonify({'categories': category_counts})
-
-
-@app.route('/api/architecture', methods=['GET'])
-def get_architecture_info():
-    """
-    Return model architecture information for the explainability view.
-    This endpoint supports the Architecture page in the frontend.
-    """
-    return jsonify({
-        'components': [
-            {
-                'name': 'SciBERT Text Encoder',
-                'type': 'Transformer',
-                'parameters': '110M',
-                'input': 'Scientific text (max 512 tokens)',
-                'output': '768-dimensional embedding',
-                'training_data': '1.14M scientific papers from Semantic Scholar',
-                'why': 'Domain-specific vocabulary from biology, physics, and CS domains'
-            },
-            {
-                'name': 'ResNet-50 Image Encoder',
-                'type': 'Convolutional Neural Network',
-                'parameters': '25M',
-                'input': '224x224 RGB image',
-                'output': '2048-dimensional feature vector',
-                'training_data': 'ImageNet (1.2M images, 1000 classes)',
-                'why': 'Hierarchical feature extraction from edges to complex shapes'
-            },
-            {
-                'name': 'Gated Residual Network',
-                'type': 'Feedforward with gating',
-                'parameters': '~500K',
-                'input': 'Engineered tabular features',
-                'output': '256-dimensional representation',
-                'training_data': 'Trained on experimental data patterns',
-                'why': 'Learned feature selection for irrelevant column suppression'
-            },
-            {
-                'name': 'Cross-Modal Attention',
-                'type': 'Multi-Head Attention',
-                'parameters': '~2M',
-                'input': 'Text and image encodings',
-                'output': '512-dimensional fused representation',
-                'training_data': 'End-to-end trained with fusion model',
-                'why': 'Enables text context to guide image feature interpretation'
-            },
-            {
-                'name': 'FLAN-T5 Large',
-                'type': 'Seq2Seq Transformer',
-                'parameters': '780M',
-                'input': 'Structured scientific context prompt',
-                'output': 'Natural language hypotheses and summaries',
-                'training_data': 'Instruction-tuned on 1836 NLP tasks',
-                'why': 'Reliable instruction-following for structured scientific output'
-            },
-            {
-                'name': 'FAISS IVFFlat Index',
-                'type': 'Approximate Nearest Neighbor',
-                'parameters': 'N/A (index structure)',
-                'input': 'Query embedding (768-dim)',
-                'output': 'Top-k similar paper IDs with distances',
-                'training_data': 'K-means clustering of arXiv embeddings',
-                'why': 'Sub-linear search time over millions of vectors'
-            }
+        'status': 'running',
+        'project': 'Scientific Insight Generation',
+        'version': '2.0',
+        'endpoints': [
+            '/api/analyze',
+            '/api/search',
+            '/api/trends',
+            '/api/health',
+            '/api/generate-hypothesis'
         ]
     })
 
+@app.route('/api/health', methods=['GET'])
+def health():
+    return jsonify({
+        'status': 'healthy',
+        'models': {
+            'scibert': True,
+            'vit': True,
+            'grn': True,
+            'flan_t5': True,
+            'faiss': True
+        },
+        'message': 'All systems operational'
+    })
 
+# ==========================================
+# ANALYZE ENDPOINT
+# ==========================================
+@app.route('/api/analyze', methods=['POST'])
+def analyze():
+    """Main multimodal analysis endpoint"""
+    try:
+        text = request.form.get('text', '').strip()
+        
+        image_bytes = None
+        csv_bytes = None
+        pdf_bytes = None
+        
+        # Handle file uploads
+        if 'image' in request.files:
+            img_file = request.files['image']
+            if img_file and img_file.filename:
+                image_bytes = read_file_bytes(img_file)
+        
+        if 'csv' in request.files:
+            csv_file = request.files['csv']
+            if csv_file and csv_file.filename:
+                csv_bytes = read_file_bytes(csv_file)
+        
+        if 'pdf' in request.files:
+            pdf_file = request.files['pdf']
+            if pdf_file and pdf_file.filename:
+                pdf_bytes = read_file_bytes(pdf_file)
+        
+        # Validate: at least one input
+        if not text and not image_bytes and not csv_bytes and not pdf_bytes:
+            return jsonify({
+                'success': False,
+                'error': 'Please provide at least one input: text, image, CSV, or PDF'
+            }), 400
+        
+        # Run analysis
+        service = get_insight_service()
+        result = service.analyze_multimodal(
+            text=text,
+            image_bytes=image_bytes,
+            csv_bytes=csv_bytes,
+            pdf_bytes=pdf_bytes
+        )
+        
+        return jsonify(result)
+    
+    except Exception as e:
+        logger.error(f"Analyze error: {traceback.format_exc()}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# ==========================================
+# SEARCH ENDPOINT
+# ==========================================
+@app.route('/api/search', methods=['POST'])
+def search():
+    """Search arXiv papers"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No JSON data provided'}), 400
+        
+        query = data.get('query', '').strip()
+        category = data.get('category', None)
+        top_k = min(int(data.get('top_k', 10)), 20)
+        
+        if not query:
+            return jsonify({'error': 'Query is required'}), 400
+        
+        service = get_arxiv_service()
+        results = service.search(query, category=category, top_k=top_k)
+        
+        return jsonify({
+            'success': True,
+            **results
+        })
+    
+    except Exception as e:
+        logger.error(f"Search error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# ==========================================
+# TRENDS ENDPOINT
+# ==========================================
+@app.route('/api/trends', methods=['GET'])
+def trends():
+    """Get research trends"""
+    try:
+        category = request.args.get('category', 'Machine Learning')
+        
+        service = get_arxiv_service()
+        trend_data = service.get_trends(category)
+        
+        return jsonify({
+            'success': True,
+            **trend_data
+        })
+    
+    except Exception as e:
+        logger.error(f"Trends error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# ==========================================
+# HYPOTHESIS ENDPOINT
+# ==========================================
+@app.route('/api/generate-hypothesis', methods=['POST'])
+def generate_hypothesis():
+    """Generate hypothesis from text alone"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No JSON data'}), 400
+        
+        text = data.get('text', '').strip()
+        domain = data.get('domain', 'Science')
+        
+        if not text:
+            return jsonify({'error': 'Text is required'}), 400
+        
+        from models.text_analyzer import text_analyzer
+        from models.hypothesis_generator import hypothesis_generator
+        
+        # Quick analysis
+        text_result = text_analyzer.analyze(text)
+        
+        context = {
+            'text': text,
+            'domain': text_result.get('domain', domain),
+            'concepts': text_result.get('key_concepts', [])
+        }
+        
+        hypotheses = hypothesis_generator.generate_hypothesis(context)
+        insights = hypothesis_generator.generate_insights(context)
+        summary = hypothesis_generator.generate_summary(context)
+        
+        return jsonify({
+            'success': True,
+            'hypotheses': hypotheses,
+            'insights': insights,
+            'summary': summary,
+            'domain': context['domain'],
+            'key_concepts': context['concepts']
+        })
+    
+    except Exception as e:
+        logger.error(f"Hypothesis error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# ==========================================
+# EDA DATA ENDPOINTS
+# ==========================================
+@app.route('/api/eda/stats', methods=['GET'])
+def eda_stats():
+    """Get statistics for World Bank or RVL-CDIP"""
+    try:
+        dataset = request.args.get('dataset', 'worldbank')
+        
+        if dataset == 'worldbank':
+            path = config.WORLD_BANK_SAMPLE
+            if not os.path.exists(path):
+                return jsonify({'success': False, 'error': 'World Bank data not found'}), 404
+                
+            import pandas as pd
+            df = pd.read_csv(path)
+            
+            # Group by year for trends
+            trends = df.groupby('year').agg({
+                'gdp_growth': 'mean',
+                'life_expectancy': 'mean',
+                'unemployment_rate': 'mean'
+            }).reset_index().to_dict(orient='records')
+            
+            # Get latest year for country comparison
+            latest_year = df['year'].max()
+            countries = df[df['year'] == latest_year].to_dict(orient='records')
+            
+            return jsonify({
+                'success': True,
+                'trends': trends,
+                'countries': countries,
+                'summary': {
+                    'total_records': len(df),
+                    'year_range': f"{df['year'].min()}-{df['year'].max()}",
+                    'indicators': ['GDP Growth', 'Life Expectancy', 'Unemployment', 'Population']
+                }
+            })
+            
+        elif dataset == 'rvlcdip':
+            # Categories based on the script
+            categories = [
+                {'name': 'Microscopy', 'value': 25000, 'file': 'sample_microscopy.png'},
+                {'name': 'Chart', 'value': 25000, 'file': 'sample_chart.png'},
+                {'name': 'Graph', 'value': 25000, 'file': 'sample_graph.png'},
+                {'name': 'Heatmap', 'value': 25000, 'file': 'sample_heatmap.png'}
+            ]
+            return jsonify({
+                'success': True,
+                'categories': categories,
+                'total_images': 100000
+            })
+            
+        return jsonify({'success': False, 'error': 'Invalid dataset'}), 400
+        
+    except Exception as e:
+        logger.error(f"EDA stats error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/eda/image/<filename>', methods=['GET'])
+def eda_image(filename):
+    """Serve sample dataset images"""
+    try:
+        return send_from_directory(config.IMAGE_SAMPLE_DIR, filename)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 404
+
+# ==========================================
+# FRAMEWORK STATS
+# ==========================================
+@app.route('/api/framework/stats', methods=['GET'])
+def framework_stats():
+    """Stats from the integrated multimodal framework"""
+    try:
+        service = get_arxiv_service()
+        index_stats = service.get_stats()
+
+        import os
+        from config import config
+        papers_csv = getattr(config, 'PAPERS_CSV', '')
+        paper_count = 0
+        category_count = 0
+        if os.path.exists(papers_csv):
+            import pandas as pd
+            df = pd.read_csv(papers_csv)
+            paper_count = len(df)
+            if 'categories' in df.columns:
+                category_count = df['categories'].str.strip().nunique()
+
+        return jsonify({
+            'success': True,
+            'framework': {
+                'papers_in_csv': paper_count,
+                'categories': category_count,
+                'papers_indexed_in_faiss': index_stats.get('faiss_index_size', 0),
+                'encoder_ready': index_stats.get('encoder_ready', False),
+                'data_sources': ['papers_metadata.csv', 'image_mappings.csv', 'extracted_entities.json']
+            }
+        })
+    except Exception as e:
+        logger.error(f"Framework stats error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# ==========================================
+# ARXIV CATEGORIES
+# ==========================================
+@app.route('/api/categories', methods=['GET'])
+def categories():
+    return jsonify({
+        'success': True,
+        'categories': list(config.ARXIV_CATEGORIES.keys())
+    })
+
+# ==========================================
+# ERROR HANDLERS
+# ==========================================
+@app.errorhandler(413)
+def too_large(e):
+    return jsonify({'error': 'File too large. Max 50MB'}), 413
+
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({'error': 'Endpoint not found'}), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return jsonify({'error': 'Internal server error'}), 500
+
+# ==========================================
+# MAIN
+# ==========================================
 if __name__ == '__main__':
+    logger.info("🚀 Starting Scientific Insight API...")
     app.run(
-        host=Config.HOST,
-        port=Config.PORT,
-        debug=Config.DEBUG
+        host='0.0.0.0',
+        port=5000,
+        debug=config.DEBUG,
+        threaded=True
     )

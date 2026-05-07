@@ -1,0 +1,14 @@
+backend/
+notebook/
+data/
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.ipynb
+.DS_Store
+Thumbs.db
+
